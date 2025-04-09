@@ -8,6 +8,8 @@ import java.time.LocalTime;
 
 @Builder
 public record MeetingDTOForm (
+        Long id,
+
         @NotBlank(message = "title is required")
         String title,
 
