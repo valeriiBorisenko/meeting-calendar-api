@@ -12,5 +12,6 @@ public record MeetingDTOView (
         LocalDate date,
         LocalTime time,
         String level,
-        String participantsEmails
+        String participantsEmails,
+        String description
 ) { }
