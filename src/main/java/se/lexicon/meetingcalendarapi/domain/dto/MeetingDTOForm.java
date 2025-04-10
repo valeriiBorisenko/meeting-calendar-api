@@ -1,6 +1,8 @@
 package se.lexicon.meetingcalendarapi.domain.dto;
 
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -13,10 +15,11 @@ public record MeetingDTOForm (
         @NotBlank(message = "title is required")
         String title,
 
-        @NotBlank(message = "date is required")
+        @NotNull(message = "date is required")
+        @FutureOrPresent(message = "date must be today or in the future")
         LocalDate date,
 
-        @NotBlank(message = "time is required")
+        @NotNull(message = "time is required")
         LocalTime time,
 
         @NotBlank(message = "level is required")

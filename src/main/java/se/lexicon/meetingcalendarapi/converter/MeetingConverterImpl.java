@@ -37,6 +37,7 @@ public class MeetingConverterImpl implements MeetingConverter {
 
         return MeetingDTOView.builder()
                 .id(meeting.getId())
+                .title(meeting.getTitle())
                 .date(meeting.getDate())
                 .time(meeting.getTime())
                 .level(meeting.getLevel())
