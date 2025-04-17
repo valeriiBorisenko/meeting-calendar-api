@@ -2,7 +2,7 @@ package se.lexicon.meetingcalendarapi.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.lexicon.meetingcalendarapi.converter.MeetingConverter;
+import se.lexicon.meetingcalendarapi.converter.Meeting.MeetingConverter;
 import se.lexicon.meetingcalendarapi.domain.dto.Meeting.MeetingDTOForm;
 import se.lexicon.meetingcalendarapi.domain.dto.Meeting.MeetingDTOView;
 import se.lexicon.meetingcalendarapi.domain.entity.Meeting;

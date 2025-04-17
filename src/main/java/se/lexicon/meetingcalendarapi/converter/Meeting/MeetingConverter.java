@@ -1,4 +1,4 @@
-package se.lexicon.meetingcalendarapi.converter;
+package se.lexicon.meetingcalendarapi.converter.Meeting;
 
 import se.lexicon.meetingcalendarapi.domain.dto.Meeting.MeetingDTOForm;
 import se.lexicon.meetingcalendarapi.domain.dto.Meeting.MeetingDTOView;
