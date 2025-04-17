@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import se.lexicon.meetingcalendarapi.domain.dto.MeetingDTOForm;
-import se.lexicon.meetingcalendarapi.domain.dto.MeetingDTOView;
+import se.lexicon.meetingcalendarapi.domain.dto.Meeting.MeetingDTOForm;
+import se.lexicon.meetingcalendarapi.domain.dto.Meeting.MeetingDTOView;
 import se.lexicon.meetingcalendarapi.service.MeetingService;
 
 import java.util.List;
