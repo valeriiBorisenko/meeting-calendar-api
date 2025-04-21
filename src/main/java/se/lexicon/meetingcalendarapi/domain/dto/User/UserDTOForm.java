@@ -6,6 +6,7 @@ import lombok.Builder;
 
 @Builder
 public record UserDTOForm(
+        Long id,
         @NotNull(message = "Users email is required")
         @Email(message = "Invalid email format")
         String email

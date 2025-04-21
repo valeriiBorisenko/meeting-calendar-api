@@ -5,11 +5,16 @@ import org.springframework.stereotype.Service;
 import se.lexicon.meetingcalendarapi.converter.Meeting.MeetingConverter;
 import se.lexicon.meetingcalendarapi.domain.dto.Meeting.MeetingDTOForm;
 import se.lexicon.meetingcalendarapi.domain.dto.Meeting.MeetingDTOView;
+import se.lexicon.meetingcalendarapi.domain.entity.Level;
 import se.lexicon.meetingcalendarapi.domain.entity.Meeting;
+import se.lexicon.meetingcalendarapi.domain.entity.User;
+import se.lexicon.meetingcalendarapi.exception.DataNotFoundException;
+import se.lexicon.meetingcalendarapi.repository.LevelRepository;
 import se.lexicon.meetingcalendarapi.repository.MeetingRepository;
+import se.lexicon.meetingcalendarapi.repository.UserRepository;
 import se.lexicon.meetingcalendarapi.service.MeetingService;
 
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,21 +24,33 @@ public class MeetingServiceImpl implements MeetingService {
 
     private final MeetingRepository meetingRepository;
     private final MeetingConverter meetingConverter;
+    private final LevelRepository levelRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public MeetingServiceImpl(MeetingRepository meetingRepository, MeetingConverter meetingConverter) {
+    public MeetingServiceImpl(MeetingRepository meetingRepository, MeetingConverter meetingConverter, LevelRepository levelRepository, UserRepository userRepository) {
         this.meetingRepository = meetingRepository;
         this.meetingConverter = meetingConverter;
+        this.levelRepository = levelRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public List<MeetingDTOView> getAllMeetings() {
-        return meetingRepository.findAll().stream().map(meetingConverter::toView).collect(Collectors.toList());
+        return meetingRepository.findAll().stream()
+                .map(meetingConverter::toView).collect(Collectors.toList());
+    }
+
+    @Override
+    public MeetingDTOView getMeetingById(Long id) {
+        return meetingRepository.findById(id).
+                map(meetingConverter::toView)
+                .orElseThrow(()-> new DataNotFoundException("Meeting not found"));
     }
 
     @Override
     public MeetingDTOView addMeeting(MeetingDTOForm form) {
-        if (form == null) throw new IllegalArgumentException("meeting cannot be null");
+        if (form == null) throw new IllegalArgumentException("Meeting cannot be null");
 
         Meeting createdMeeting = meetingConverter.toEntity(form);
         createdMeeting = meetingRepository.save(createdMeeting);
@@ -42,27 +59,31 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
-    public MeetingDTOView updateMeeting(MeetingDTOForm form) {
-        if (form == null) throw new IllegalArgumentException("meeting cannot be null");
-        Meeting meeting = meetingRepository.findById(form.id()).orElseThrow(() -> new IllegalArgumentException("Meeting not found"));
+    public boolean updateMeeting(MeetingDTOForm form) {
+        if (form == null) throw new IllegalArgumentException("Meeting cannot be null");
+        Meeting meeting = meetingRepository.findById(form.id()).orElseThrow(() -> new DataNotFoundException("Meeting not found"));
 
         meeting.setTitle(form.title());
         meeting.setDate(form.date());
         meeting.setTime(form.time());
-        meeting.setLevel(form.level());
 
-        Set<String> participantsEmails = Arrays.stream(form.participantsEmails().split(","))
-                .map(String::trim)
-                .map(String::toLowerCase)
-                .filter(s -> !s.isEmpty())
-                .collect(Collectors.toSet());
+        Level level = levelRepository.findByName(form.level().toLowerCase())
+                .orElseThrow(() -> new DataNotFoundException("Level not found"));
 
-        meeting.setParticipantsEmails(participantsEmails);
+        Set<User> participants = form.participants() != null ?
+                form.participants().stream()
+                        .map(email -> userRepository.findByEmail(email)
+                                .orElseThrow(() -> new DataNotFoundException("User not found : " + email)))
+                        .collect(Collectors.toSet())
+                : new HashSet<>();
+
+        meeting.setLevel(level);
+        meeting.setParticipants(participants);
         meeting.setDescription(form.description());
 
         Meeting updatedMeeting = meetingRepository.save(meeting);
 
-        return meetingConverter.toView(updatedMeeting);
+        return updatedMeeting != null;
     }
 
     @Override

@@ -6,6 +6,7 @@ import lombok.Builder;
 
 @Builder
 public record LevelDTOForm(
+        Long id,
         @NotBlank(message = "Level name is required")
         String name
 ) { }

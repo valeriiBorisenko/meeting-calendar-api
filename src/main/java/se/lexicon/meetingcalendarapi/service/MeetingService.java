@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface MeetingService {
     List<MeetingDTOView> getAllMeetings();
+    MeetingDTOView getMeetingById(Long id);
     MeetingDTOView addMeeting(MeetingDTOForm form);
-    MeetingDTOView updateMeeting(MeetingDTOForm form );
+    boolean updateMeeting(MeetingDTOForm form );
     void deleteMeeting(Long id);
 }

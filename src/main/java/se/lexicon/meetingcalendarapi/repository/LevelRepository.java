@@ -7,8 +7,8 @@ import se.lexicon.meetingcalendarapi.domain.entity.Level;
 import java.util.Optional;
 
 @Repository
-public interface LevelRepository extends JpaRepository<LevelRepository, Integer> {
-    boolean existsById(Long levelId);
+public interface LevelRepository extends JpaRepository<Level, Integer> {
+    boolean existsByName(String levelName);
     Optional<Level> findByName(String levelName);
     void deleteById(Long levelId);
 }
