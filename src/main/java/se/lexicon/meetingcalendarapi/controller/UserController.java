@@ -1,6 +1,5 @@
 package se.lexicon.meetingcalendarapi.controller;
 
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin("*")
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v2/users")
 @RestController
 @Validated
 

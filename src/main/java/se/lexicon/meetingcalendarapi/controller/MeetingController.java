@@ -1,6 +1,5 @@
 package se.lexicon.meetingcalendarapi.controller;
 
-
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin("*")
-@RequestMapping("/api/v1/meetings")
+@RequestMapping("/api/v2/meetings")
 @RestController
 @Validated
 

@@ -11,7 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class RESTExceptonHandler extends ResponseEntityExceptionHandler {
+public class RESTExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({
             DataNotFoundException.class,

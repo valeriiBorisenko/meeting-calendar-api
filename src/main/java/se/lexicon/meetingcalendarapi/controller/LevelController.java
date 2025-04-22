@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin("*")
-@RequestMapping("/api/v1/levels")
+@RequestMapping("/api/v2/levels")
 @RestController
 @Validated
 
