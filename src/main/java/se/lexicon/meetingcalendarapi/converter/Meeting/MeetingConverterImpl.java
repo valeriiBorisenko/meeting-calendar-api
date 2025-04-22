@@ -1,14 +1,17 @@
 package se.lexicon.meetingcalendarapi.converter.Meeting;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.lexicon.meetingcalendarapi.converter.Level.LevelConverter;
 import se.lexicon.meetingcalendarapi.converter.User.UserConverter;
 import se.lexicon.meetingcalendarapi.domain.dto.Meeting.MeetingDTOForm;
 import se.lexicon.meetingcalendarapi.domain.dto.Meeting.MeetingDTOView;
+import se.lexicon.meetingcalendarapi.domain.dto.User.UserShortDTOView;
 import se.lexicon.meetingcalendarapi.domain.entity.Level;
 import se.lexicon.meetingcalendarapi.domain.entity.Meeting;
 import se.lexicon.meetingcalendarapi.domain.entity.User;
+import se.lexicon.meetingcalendarapi.exception.DataNotFoundException;
 import se.lexicon.meetingcalendarapi.repository.LevelRepository;
 import se.lexicon.meetingcalendarapi.repository.UserRepository;
 
@@ -28,13 +31,13 @@ public class MeetingConverterImpl implements MeetingConverter {
     @Override
     public Meeting toEntity(MeetingDTOForm form) {
 
-        Level findLevel = levelRepository.findByName(form.level().toLowerCase())
-                .orElseThrow(() -> new IllegalArgumentException("Level not found"));
+        Level findLevel = levelRepository.findByName(form.level())
+                .orElseThrow(() -> new DataNotFoundException("Level not found"));
 
         Set<User> participants = form.participants() != null ?
                 form.participants().stream()
                         .map(email -> userRepository.findByEmail(email)
-                                .orElseThrow(() -> new IllegalArgumentException("User not found : " + email)))
+                                .orElseThrow(() -> new DataNotFoundException("User not found : " + email)))
                         .collect(Collectors.toSet())
                 : new HashSet<>();
 
@@ -57,8 +60,13 @@ public class MeetingConverterImpl implements MeetingConverter {
                 .date(meeting.getDate())
                 .time(meeting.getTime())
                 .level(levelConverter.toView(meeting.getLevel()))
-                .participants(meeting.getParticipants().stream()
-                        .map(userConverter::toView).collect(Collectors.toList()))
+                .participants(meeting.getParticipants().stream().map(user ->
+                                UserShortDTOView.builder()
+                                        .id(user.getId())
+                                        .email(user.getEmail())
+                                        .build()
+                        ).collect(Collectors.toList())
+                )
                 .description(meeting.getDescription())
                 .build();
     }

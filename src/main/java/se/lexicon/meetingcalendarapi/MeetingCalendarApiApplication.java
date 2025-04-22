@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import se.lexicon.meetingcalendarapi.service.LevelService;
 
 @SpringBootApplication
 public class MeetingCalendarApiApplication {
@@ -15,9 +16,9 @@ public class MeetingCalendarApiApplication {
 
     @Profile("dev")
     @Bean
-    public CommandLineRunner runner () {
+    public CommandLineRunner runner (LevelService levelService) {
         return (args) -> {
-
+            //levelService.getAllLevels().forEach(System.out::println);
         };
     }
 

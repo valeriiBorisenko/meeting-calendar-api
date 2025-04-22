@@ -7,11 +7,11 @@ import se.lexicon.meetingcalendarapi.domain.dto.Level.LevelDTOForm;
 import se.lexicon.meetingcalendarapi.domain.dto.Level.LevelDTOView;
 import se.lexicon.meetingcalendarapi.domain.entity.Level;
 import se.lexicon.meetingcalendarapi.exception.DataDuplicateException;
-import se.lexicon.meetingcalendarapi.exception.DataNotFoundException;
 import se.lexicon.meetingcalendarapi.repository.LevelRepository;
 import se.lexicon.meetingcalendarapi.service.LevelService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,15 +32,13 @@ public class LevelServiceImpl implements LevelService {
     }
 
     @Override
-    public LevelDTOView findLevelByName(LevelDTOForm form) {
-        if (form == null) throw new IllegalArgumentException("Level form can't be null");
-
-        return levelRepository.findByName(form.name().toLowerCase()).map(levelConverter::toView).orElseThrow(() -> new DataNotFoundException("Level not found"));
+    public Optional<LevelDTOView> findLevelById(Long id) {
+        return levelRepository.findById(id).map(levelConverter::toView);
     }
 
     @Override
-    public boolean existLevelByName(LevelDTOForm form) {
-        return levelRepository.existsByName(form.name().toLowerCase());
+    public boolean existLevelById(Long id) {
+        return levelRepository.existsById(id);
     }
 
     @Override

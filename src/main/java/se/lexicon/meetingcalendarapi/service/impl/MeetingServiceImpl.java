@@ -16,6 +16,7 @@ import se.lexicon.meetingcalendarapi.service.MeetingService;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,15 +43,13 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
-    public MeetingDTOView getMeetingById(Long id) {
-        return meetingRepository.findById(id).
-                map(meetingConverter::toView)
-                .orElseThrow(()-> new DataNotFoundException("Meeting not found"));
+    public Optional<MeetingDTOView> findMeetingById(Long id) {
+        return meetingRepository.findById(id).map(meetingConverter::toView);
     }
 
     @Override
     public MeetingDTOView addMeeting(MeetingDTOForm form) {
-        if (form == null) throw new IllegalArgumentException("Meeting cannot be null");
+        if (form == null) throw new IllegalArgumentException("Meeting form cannot be null");
 
         Meeting createdMeeting = meetingConverter.toEntity(form);
         createdMeeting = meetingRepository.save(createdMeeting);
@@ -60,7 +59,7 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Override
     public boolean updateMeeting(MeetingDTOForm form) {
-        if (form == null) throw new IllegalArgumentException("Meeting cannot be null");
+        if (form == null) throw new IllegalArgumentException("Meeting form cannot be null");
         Meeting meeting = meetingRepository.findById(form.id()).orElseThrow(() -> new DataNotFoundException("Meeting not found"));
 
         meeting.setTitle(form.title());

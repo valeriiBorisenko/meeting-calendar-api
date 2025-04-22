@@ -12,6 +12,7 @@ import se.lexicon.meetingcalendarapi.domain.dto.Meeting.MeetingDTOView;
 import se.lexicon.meetingcalendarapi.service.MeetingService;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RequestMapping("/api/v1/meetings")
@@ -29,6 +30,13 @@ public class MeetingController {
     @GetMapping()
     public ResponseEntity<List<MeetingDTOView>> doGetAllMeetings() {
         return ResponseEntity.ok(meetingService.getAllMeetings());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MeetingDTOView> doGetMeetingById(@PathVariable @Valid Long id) {
+        Optional<MeetingDTOView> responseBody = meetingService.findMeetingById(id);
+
+        return responseBody.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping()
